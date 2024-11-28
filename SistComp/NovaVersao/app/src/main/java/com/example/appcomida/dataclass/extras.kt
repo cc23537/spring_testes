@@ -1,5 +1,7 @@
 package com.example.appcomida.dataclass
 
+import java.time.LocalDate
+
 data class ApiResponse(
     val idCompra: Int,
     val alimentoASerComprado: AlimentoApi,
@@ -21,4 +23,17 @@ data class ClienteApi(
     val senha: String,
     val peso: Double?,
     val altura: Double?
+)
+
+data class AlimentoEstocadoResponse(
+    val idEstoque: Int,
+    val alimentoASerEstocado: AlimentoApi, // Usando a classe AlimentoApi
+    val especificacoes: String,
+    val validade: String, // O campo validade é uma String, pois a data está no formato "YYYY-MM-DD"
+    val cliente: ClienteApi // Usando a classe ClienteApi
+)
+
+data class AlimentoASerEstocado(
+    val idAlimento: Int,
+    val nomeAlimento: AlimentoApi,
 )

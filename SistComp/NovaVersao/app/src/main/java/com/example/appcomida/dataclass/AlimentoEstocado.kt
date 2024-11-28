@@ -9,3 +9,4 @@ data class AlimentoEstocado(
     val validade: LocalDate,
     val clienteId: Int = 0
 )
+

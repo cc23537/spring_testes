@@ -1,3 +1,6 @@
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -5,14 +8,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import java.time.LocalDate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
+@RequiresApi(Build.VERSION_CODES.O)
 public fun getRetrofit(): Retrofit {
     val logging = HttpLoggingInterceptor()
     logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-
+    val gson = GsonBuilder()
+        .registerTypeAdapter(LocalDate::class.java, LocalDateDeserializer())
+        .create()
     val client = UnsafeOkHttpClient.getUnsafeOkHttpClient().newBuilder()
         .addInterceptor(logging)
         .build()
@@ -20,6 +27,7 @@ public fun getRetrofit(): Retrofit {
     return Retrofit.Builder()
         .baseUrl("http://10.0.2.2:8085/") // Use 10.0.2.2 para emuladores ou configure o IP correto
         .client(client)
+
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())  // Suporte para corrotinas
         .build()

@@ -103,18 +103,15 @@ public class ClienteController {
     }
 
     @GetMapping("/{idCliente}/alimentosestocados")
-    public ResponseEntity<List<Alimento>> listarAlimentosEstocadosPorCliente(@PathVariable int idCliente) {
+    public ResponseEntity<List<AlimentoEstocado>> listarAlimentosEstocadosPorCliente(@PathVariable int idCliente) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
         if (clienteOptional.isPresent()) {
-          
+            
+            // Obtenha a lista de AlimentoEstocado para o cliente
             List<AlimentoEstocado> estoque = alimentoEstocadoRepository.findByCliente(clienteOptional.get());
 
-            List<Alimento> alimentosEstocados = estoque.stream()
-                    .map(alimentoEstocado -> alimentoEstocado.getAlimentoASerEstocado())
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            return new ResponseEntity<>(alimentosEstocados, HttpStatus.OK);
+            // Retorne a lista de AlimentoEstocado
+            return new ResponseEntity<>(estoque, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
