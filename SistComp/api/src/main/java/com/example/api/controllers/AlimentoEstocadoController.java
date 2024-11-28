@@ -35,7 +35,6 @@ public class AlimentoEstocadoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
         }
     
-
         Optional<Alimento> alimentoOptional = alimentoRepository.findById(alimentoEstocado.getAlimentoASerEstocado().getIdAlimento());
         Alimento alimento;
         if (alimentoOptional.isPresent()) {
@@ -48,6 +47,11 @@ public class AlimentoEstocadoController {
     
         alimentoEstocado.setAlimentoASerEstocado(alimento);
         alimentoEstocado.setCliente(clienteOptional.get()); 
+        // A quantidade de estoque deve ser definida aqui
+        if (alimentoEstocado.getQuantidadeEstoque() <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Não permitir quantidade negativa ou zero
+        }
+        
         AlimentoEstocado alimentoEstocadoSalvo = alimentoEstocadoRepository.save(alimentoEstocado);
     
         return new ResponseEntity<>(alimentoEstocadoSalvo, HttpStatus.CREATED);
@@ -55,26 +59,29 @@ public class AlimentoEstocadoController {
     
     @PutMapping("/{idEstoque}")
     public ResponseEntity<AlimentoEstocado> atualizarAlimentoEstocado(@PathVariable int idEstoque, @RequestBody AlimentoEstocado alimentoEstocadoAtualizado) {
-        return alimentoEstocadoRepository.findById(idEstoque)
-                .map(alimentoEstocado -> {
-                    alimentoEstocado.setEspecificacoes(alimentoEstocadoAtualizado.getEspecificacoes());
-                    alimentoEstocado.setValidade(alimentoEstocadoAtualizado.getValidade());
-                    alimentoEstocado.setAlimentoASerEstocado(alimentoEstocadoAtualizado.getAlimentoASerEstocado());
-                    alimentoEstocado.setCliente(alimentoEstocadoAtualizado.getCliente());
-
-                    AlimentoEstocado alimentoEstocadoSalvo = alimentoEstocadoRepository.save(alimentoEstocado);
-                    return new ResponseEntity<>(alimentoEstocadoSalvo, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND)); 
-    }
-
-    @DeleteMapping("/{idEstoque}")
-    public ResponseEntity<Void> removerAlimentoEstocado(@PathVariable int idEstoque) {
-        if (alimentoEstocadoRepository.existsById(idEstoque)) {
-            alimentoEstocadoRepository.deleteById(idEstoque);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Optional<AlimentoEstocado> alimentoEstocadoOptional = alimentoEstocadoRepository.findById(idEstoque);
+        
+        if (!alimentoEstocadoOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        AlimentoEstocado alimentoEstocado = alimentoEstocadoOptional.get();
+        
+        // Atualiza as propriedades
+        alimentoEstocado.setEspecificacoes(alimentoEstocadoAtualizado.getEspecificacoes());
+        alimentoEstocado.setValidade(alimentoEstocadoAtualizado.getValidade());
+        alimentoEstocado.setAlimentoASerEstocado(alimentoEstocadoAtualizado.getAlimentoASerEstocado());
+        alimentoEstocado.setCliente(alimentoEstocadoAtualizado.getCliente());
+
+        // Valida a quantidade de estoque
+        if (alimentoEstocadoAtualizado.getQuantidadeEstoque() <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Não permitir quantidade negativa ou zero
+        }
+        
+        alimentoEstocado.setQuantidadeEstoque(alimentoEstocadoAtualizado.getQuantidadeEstoque());
+
+        AlimentoEstocado alimentoEstocadoSalvo = alimentoEstocadoRepository.save(alimentoEstocado);
+        return new ResponseEntity<>(alimentoEstocadoSalvo, HttpStatus.OK);
     }
 
     @GetMapping

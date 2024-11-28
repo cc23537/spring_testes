@@ -36,4 +36,7 @@ public class AlimentoEstocado {
     @JoinColumn(name = "idCliente", nullable = false)
     private Cliente cliente;
 
+    @Column(nullable = false)
+    private int quantidadeEstoque;
+
 }

@@ -4,43 +4,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.appcomida.R
-import com.example.appcomida.SharedViewModel
 import com.example.appcomida.databinding.FragmentHomeBinding
-
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var sharedViewModel: SharedViewModel
-
-    // Variáveis para armazenar os argumentos recebidos
-    private var email: String? = null
-    private var senha: String? = null
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+    ): View {
+        val homeViewModel =
+            ViewModelProvider(this).get(HomeViewModel::class.java)
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val root: View = binding.root
 
-        // Recupera os argumentos passados de LoginFragment
-        arguments?.let {
-            email = it.getString("email")
-            senha = it.getString("senha")
-        }
+        return root
+    }
 
-        // Exibe o email ou outro comportamento necessário
-        println("Email recebido: $email")
-        println("Senha recebida: $senha")
-
-        return binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroyView() {
@@ -48,4 +42,3 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
-

@@ -16,7 +16,6 @@ import com.example.appcomida.R
 import com.example.appcomida.UserViewModel
 import com.example.appcomida.databinding.FragmentCalendarioBinding
 import com.example.appcomida.dataclass.Alimento
-import com.example.appcomida.dataclass.AlimentoASerEstocado
 import com.example.appcomida.dataclass.AlimentoEstocado
 import com.example.appcomida.rotas.AlimentoEstocadoRotas
 import com.example.appcomida.dataclass.AlimentoEstocadoResponse

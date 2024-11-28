@@ -1,5 +1,7 @@
 package com.example.appcomida.api
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.appcomida.ApiService
 import com.example.appcomida.dataclass.Alimento
 import com.example.appcomida.dataclass.AlimentoEstocado
@@ -12,6 +14,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun registrarAlimentoEstocado(alimentoEstocado: AlimentoEstocado) {
     val apiService = getRetrofit().create(AlimentoEstocadoRotas::class.java)
     val response = apiService.resgistrarAlimentoEstocado(alimentoEstocado)

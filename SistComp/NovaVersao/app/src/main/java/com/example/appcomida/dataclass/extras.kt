@@ -30,10 +30,7 @@ data class AlimentoEstocadoResponse(
     val alimentoASerEstocado: AlimentoApi, // Usando a classe AlimentoApi
     val especificacoes: String,
     val validade: String, // O campo validade é uma String, pois a data está no formato "YYYY-MM-DD"
-    val cliente: ClienteApi // Usando a classe ClienteApi
+    val cliente: ClienteApi, // Usando a classe ClienteApi
+    val quantidade: Int
 )
 
-data class AlimentoASerEstocado(
-    val idAlimento: Int,
-    val nomeAlimento: AlimentoApi,
-)

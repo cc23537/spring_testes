@@ -13,13 +13,10 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 public fun getRetrofit(): Retrofit {
     val logging = HttpLoggingInterceptor()
     logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-    val gson = GsonBuilder()
-        .registerTypeAdapter(LocalDate::class.java, LocalDateDeserializer())
-        .create()
     val client = UnsafeOkHttpClient.getUnsafeOkHttpClient().newBuilder()
         .addInterceptor(logging)
         .build()
