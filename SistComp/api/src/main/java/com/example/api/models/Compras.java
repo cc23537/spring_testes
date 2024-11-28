@@ -16,10 +16,16 @@ public class Compras {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int idCompra;
         
-        @Column(nullable = false)
+        @ManyToOne
+        @JoinColumn(name = "idAlimento", nullable = false)
         private Alimento alimentoASerComprado;
 
         @Column(nullable = false)
         private int quantidade;
+        
+        @ManyToOne
+        @JoinColumn(name = "idCliente", nullable = false)
+        private Cliente cliente;
+
 }
     

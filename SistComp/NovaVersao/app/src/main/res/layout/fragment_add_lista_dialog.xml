@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ListarCompra"
+    android:background="@color/white">
+
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="318dp"
+        android:layout_height="378dp"
+        android:layout_marginStart="37dp"
+        android:layout_marginEnd="37dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txtAddC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:text="ADICIONAR COMPRAS"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txtNomeAddAlimento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
+            android:text="NOME DA COMPRA"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtDescCompra"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border_rounded"
+            android:fontFamily="@font/adlam_display"
+            android:hint="Nome"
+            android:textSize="16sp"
+            android:typeface="serif"
+            app:circularflow_defaultRadius="10dp"
+            app:circularflow_radiusInDP="50dp" />
+
+        <TextView
+            android:id="@+id/txtQnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
+            android:text="QUANTIDADE"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtQnt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/border_rounded"
+            android:fontFamily="@font/adlam_display"
+            android:hint="Qnt."
+            android:textSize="16sp"
+            android:typeface="serif"
+            app:circularflow_defaultRadius="10dp"
+            app:circularflow_radiusInDP="50dp" />
+
+        <Button
+            android:id="@+id/btnAddC"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/border_button"
+            android:fontFamily="@font/allerta"
+            android:text="ADICIONAR"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnFechar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/border_button"
+            android:fontFamily="@font/allerta"
+            android:text="FECHAR"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,9 @@
 package com.example.api.models;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,18 +15,25 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "Tcc_Alimentos")
-public class Estoque {
+public class AlimentoEstocado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idEstoque;
     
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "idAlimento", nullable = false)
     private Alimento alimentoASerEstocado;
 
     @Column(nullable = true)
     private String especificacoes;
 
-    @Column(nullable = true)
-    private String validade;
+    @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate validade;
+
+    @ManyToOne
+    @JoinColumn(name = "idCliente", nullable = false)
+    private Cliente cliente;
+
 }

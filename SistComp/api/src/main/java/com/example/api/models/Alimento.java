@@ -1,9 +1,7 @@
 package com.example.api.models;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,4 +20,8 @@ public class Alimento {
 
     @Column(nullable = true)
     private Double calorias;
+
+    @ManyToOne
+    @JoinColumn(name = "idCliente", nullable = false)
+    private Cliente cliente; 
 }
