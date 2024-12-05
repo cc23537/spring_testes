@@ -1,0 +1,106 @@
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Conteúdo Principal -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <!-- Botão de alternância para abrir/fechar a barra lateral -->
+        <Button
+            android:id="@+id/btn_toggle_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Menu"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/ic_menu" />
+
+        <!-- Área de conteúdo principal -->
+        <FrameLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/btn_toggle_menu"
+            android:background="@color/white"/>
+    </RelativeLayout>
+
+    <!-- Barra Lateral -->
+    <LinearLayout
+        android:id="@+id/side_menu"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/sidebar_background"
+        android:layout_gravity="start"
+        android:padding="16dp">
+
+        <!-- Cabeçalho da barra lateral -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/img_profile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_profile"
+                android:background="@drawable/profile_image_background"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/img_profile"
+                android:layout_centerVertical="true"
+                android:text="Username"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <!-- Itens do Menu -->
+        <TextView
+            android:id="@+id/btn_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Home"
+            android:textColor="@color/white"
+            android:drawableStart="@drawable/ic_home"
+            android:drawablePadding="8dp" />
+
+        <TextView
+            android:id="@+id/btn_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Gallery"
+            android:textColor="@color/white"
+            android:drawableStart="@drawable/ic_gallery"
+            android:drawablePadding="8dp" />
+
+        <TextView
+            android:id="@+id/btn_welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Welcome"
+            android:textColor="@color/white"
+            android:drawableStart="@drawable/ic_welcome"
+            android:drawablePadding="8dp" />
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

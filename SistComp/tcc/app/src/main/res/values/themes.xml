@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Tcc" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimaryVariant">@color/blueTeste</item>
+        <item name="colorPrimary">@color/blueTeste</item>
+    </style>
+
+    <style name="Theme.Tcc" parent="Base.Theme.Tcc" />
+</resources>
