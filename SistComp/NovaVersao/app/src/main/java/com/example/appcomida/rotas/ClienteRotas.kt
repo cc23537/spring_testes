@@ -17,4 +17,7 @@ interface ClienteRotas {
 
     @POST("clientes")
     suspend fun register(@Body cliente: Cliente): Response<Cliente>
+
+    @GET("/clientes/{id}")
+    suspend fun achaCliente(@Path("id") id: Int): Response<Cliente>
 }
