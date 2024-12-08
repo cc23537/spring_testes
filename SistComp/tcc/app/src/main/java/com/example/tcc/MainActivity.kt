@@ -58,12 +58,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnGallery.setOnClickListener {
-            replaceFragment(GalleryFragment(), true)
+            replaceFragment(ListaFragment(), true)
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
 
         binding.btnWelcome.setOnClickListener {
-            replaceFragment(WelcomeFragment(), true)
+            replaceFragment(CalendarioFragment(), true)
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
 

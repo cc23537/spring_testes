@@ -1,6 +1,7 @@
 package com.example.tcc.api
 
 import com.example.tcc.dataclass.AlimentoEstocado
+import com.example.tcc.dataclass.AlimentoEstocadoDto
 import com.example.tcc.dataclass.AlimentoEstocadoResponse
 import com.example.tcc.dataclass.ApiResponse
 import com.example.tcc.dataclass.Cliente
@@ -30,7 +31,7 @@ interface Rotas {
     fun resgistrarAlimentoEstocado(@Body alimentoEstocado: AlimentoEstocado): Response<AlimentoEstocado>
 
     @GET("/clientes/{id}/alimentosestocados")
-    suspend  fun getAllAlimentosEstocados(@Path("id") id:Int): Response<List<AlimentoEstocadoResponse>>
+    suspend  fun getAllAlimentosEstocados(@Path("id") id:Int): Response<List<AlimentoEstocadoDto>>
 
 
     @POST("compras")

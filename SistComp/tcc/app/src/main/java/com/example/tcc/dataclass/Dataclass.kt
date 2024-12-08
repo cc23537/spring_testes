@@ -62,3 +62,11 @@ data class Compra(
     val clienteId: Int
 
 )
+
+data class AlimentoEstocadoDto(
+    val nomeAlimento: String,
+    val validade: LocalDate,
+    val quantidadeEstoque: Int,
+    val calorias: Double,
+    val especificacoes: String
+)

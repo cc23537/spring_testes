@@ -2,6 +2,7 @@ package com.example.api.controllers;
 
 import com.example.api.models.Alimento;
 import com.example.api.models.AlimentoEstocado;
+import com.example.api.models.AlimentoEstocadoDTO;
 import com.example.api.models.Cliente;
 import com.example.api.models.Compras;
 import com.example.api.repositories.AlimentoEstocadoRepository;
@@ -101,20 +102,30 @@ public class ClienteController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
     @GetMapping("/{idCliente}/alimentosestocados")
-    public ResponseEntity<List<AlimentoEstocado>> listarAlimentosEstocadosPorCliente(@PathVariable int idCliente) {
+    public ResponseEntity<List<AlimentoEstocadoDTO>> listarAlimentosEstocadosPorCliente(@PathVariable int idCliente) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(idCliente);
         if (clienteOptional.isPresent()) {
-            
             // Obtenha a lista de AlimentoEstocado para o cliente
             List<AlimentoEstocado> estoque = alimentoEstocadoRepository.findByCliente(clienteOptional.get());
 
-            // Retorne a lista de AlimentoEstocado
-            return new ResponseEntity<>(estoque, HttpStatus.OK);
+            // Mapeie a lista de AlimentoEstocado para a lista de AlimentoEstocadoDTO
+            List<AlimentoEstocadoDTO> estoqueDTO = estoque.stream().map(alimentoEstocado -> 
+                new AlimentoEstocadoDTO(
+                    alimentoEstocado.getAlimentoASerEstocado().getNomeAlimento(),
+                    alimentoEstocado.getValidade(),
+                    alimentoEstocado.getQuantidadeEstoque(),
+                    alimentoEstocado.getAlimentoASerEstocado().getCalorias(),
+                    alimentoEstocado.getEspecificacoes()
+                )
+            ).collect(Collectors.toList());
+
+            // Retorne a lista de AlimentoEstocadoDTO
+            return new ResponseEntity<>(estoqueDTO, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 
     @GetMapping("/{idCliente}/alimentoscomprados")
     public ResponseEntity<List<Alimento>> listarAlimentosCompradosPorCliente(@PathVariable int idCliente) {

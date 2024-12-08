@@ -1,59 +1,138 @@
  package com.example.tcc
 
+import CaixaAzulDecorator
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.tcc.api.Rotas
+import com.example.tcc.api.getRetrofit
+import com.example.tcc.databinding.FragmentCalendarioBinding
+import com.example.tcc.dataclass.AlimentoEstocado
+import com.example.tcc.dataclass.AlimentoEstocadoDto
+import com.example.tcc.dataclass.AlimentoEstocadoResponse
+import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+ @RequiresApi(Build.VERSION_CODES.O)
+ class CalendarioFragment : Fragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CalendarioFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class CalendarioFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+     private var _binding: FragmentCalendarioBinding? = null
+     private val binding get() = _binding!!
+     private lateinit var calendarView: MaterialCalendarView
+     private lateinit var azulDecorator: CaixaAzulDecorator
+     private lateinit var userViewModel: ClienteViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+     override fun onCreateView(
+         inflater: LayoutInflater,
+         container: ViewGroup?,
+         savedInstanceState: Bundle?
+     ): View {
+         _binding = FragmentCalendarioBinding.inflate(inflater, container, false)
+         val root: View = binding.root
+         userViewModel = ViewModelProvider(requireActivity()).get(ClienteViewModel::class.java)
+         calendarView = binding.calendarView
+         azulDecorator = CaixaAzulDecorator(mutableListOf(), requireContext().getDrawable(R.drawable.caixa_azul)!!)
+         calendarView.addDecorator(azulDecorator)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendario, container, false)
-    }
+         fetchAlimentosEstocados()
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CalendarioFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CalendarioFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-}
+         return root
+     }
+
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+         super.onViewCreated(view, savedInstanceState)
+
+         binding.floatingAddAlimentos.setOnClickListener {
+             Toast.makeText(requireContext(), "Adicionar alimentos ainda não implementado!", Toast.LENGTH_SHORT).show()
+         }
+
+         calendarView.setOnDateChangedListener { _, date, _ ->
+             handleDateClick(date)
+         }
+     }
+
+     override fun onDestroyView() {
+         super.onDestroyView()
+         _binding = null
+     }
+
+     private fun fetchAlimentosEstocados() {
+         println("Iniciando fetchAlimentosEstocados")
+         val retrofit = getRetrofit()
+         val apiService = retrofit.create(Rotas::class.java)
+         val alimentosEstocadosList = arrayListOf<AlimentoEstocadoDto>()
+
+         val idCliente = userViewModel.clienteId.value
+         println("ID Cliente: $idCliente")
+
+         if (idCliente == null) {
+             println("Cliente não autenticado!")
+             return
+         }
+         lifecycleScope.launch {
+             try {
+                 val response = apiService.getAllAlimentosEstocados(idCliente)
+                 if (response.isSuccessful) {
+                     val alimentosEstocadosResponses = response.body()
+                     if (alimentosEstocadosResponses != null) {
+                         alimentosEstocadosResponses.forEach { alimentoEstocado ->
+                             println(alimentoEstocado)
+                         }
+                     }
+                 } else {
+                     println("Erro ao obter dados: ${response.message()}")
+                 }
+             } catch (e: Exception) {
+                 println("Erro ao obter dados: ${e.message}")
+             }
+         }
+
+
+     }
+
+
+
+
+     private fun updateCalendar(datas: List<LocalDate>) {
+         val azulDays = datas.map { date ->
+             CalendarDay.from(date.year, date.monthValue - 1, date.dayOfMonth)
+         }
+
+         azulDecorator.dates.clear()
+         azulDecorator.dates.addAll(azulDays)
+         calendarView.invalidateDecorators()
+     }
+
+     private fun handleDateClick(date: CalendarDay) {
+         val diaSelecionado = "${date.day}/${date.month + 1}/${date.year}"
+         Toast.makeText(requireContext(), "Dia selecionado: $diaSelecionado", Toast.LENGTH_SHORT).show()
+     }
+
+     private fun filterFoodsForToday(alimentosEstocados: List<AlimentoEstocado>): List<AlimentoEstocado> {
+         val hoje = LocalDate.now()
+         return alimentosEstocados.filter { it.validade == hoje }
+     }
+
+     private fun updateTodayFoodsLabel(alimentosDoDia: List<AlimentoEstocado>) {
+         val todayFoodsTextView = binding.tvExpiredFoods
+
+         if (alimentosDoDia.isNotEmpty()) {
+             val alimentosList = alimentosDoDia.joinToString(separator = "\n") {
+                 "• ${it.alimentoASerEstocado?.nomeAlimento ?: "Sem nome"}"
+             }
+             todayFoodsTextView.text = "Alimentos Estocados que vencem Hoje:\n$alimentosList"
+         } else {
+             todayFoodsTextView.text = "Nenhum alimento estocado vence hoje."
+         }
+     }
+
+ }
