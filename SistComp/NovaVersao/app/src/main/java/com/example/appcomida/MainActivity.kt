@@ -2,7 +2,17 @@ package com.example.appcomida
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
+import okhttp3.RequestBody.Companion.toRequestBody
+import android.util.Log
+import org.json.JSONObject
+import org.json.JSONArray
 import android.view.View
+import okhttp3.OkHttpClient
+import okhttp3.*
+import java.io.IOException
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -107,6 +117,72 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    
+    //gpt para as receitas
+    val question = "banana"// aqui precisa ser passado os alimentos presentes no carrinho, coloquei banana só como exemplo
+       Toast.makeText(this,question, Toast.LENGTH_SHORT).show()
+        if(question.isNotEmpty()){ 
+           getResponse(question) { response ->
+              runOnUiThread {
+                    txtResponse.text = response    //  PARTE PARA EXIBIR NA TELA
+               }
+            }
+        }
+    }
+
+
+
+    private val client = OkHttpClient()
+    fun getResponse(callback: (String) -> Unit) {
+        // Variável já existente no código
+        val alimentos = question //banana como exemplo, porem tem que colocar aqui de alguma forma os alimentos disponiveis
+
+
+
+
+
+        // Configurações da API
+        val apiKey = "sk-proj-0vX3DHj0PfkFhT-vJMyf43aHT1nT1YhlpNbMwtTw2FEmZzdcS_5rrRQE3du9js8kv6tFUd7VcNT3BlbkFJVp4INvOxmnryAnesZ9QUSCN_9m8kc7De54VkR75O68A2fkl1HhV5fleuAs3k_CBIf8DOcDEUQAsk-proj-0vX3DHj0PfkFhT-vJMyf43aHT1nT1YhlpNbMwtTw2FEmZzdcS_5rrRQE3du9js8kv6tFUd7VcNT3BlbkFJVp4INvOxmnryAnesZ9QUSCN_9m8kc7De54VkR75O68A2fkl1HhV5fleuAs3k_CBIf8DOcDEUQA"
+        val url = "https://api.openai.com/v1/engines/text-davinci-003/completions"
+
+        // Corpo da solicitação
+        val requestBody = """
+        {
+            "prompt": "monte uma receita com os seguintes alimentos $alimentos",
+            "max_tokens": 500,
+            "temperature": 0
+        }
+    """.trimIndent()
+
+        // Construção da solicitação
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+            .build()
+
+        // Realização da chamada à API
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("error", "API failed", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                if (body != null) {
+                    Log.v("data", body)
+                } else {
+                    Log.v("data", "empty")
+                }
+                val jsonObject = JSONObject(body)
+                val jsonArray: JSONArray = jsonObject.getJSONArray("choices")
+                val textResult = jsonArray.getJSONObject(0).getString("text")
+                callback(textResult)
+            }
+        })
+    }//aqui acaba a parte da IA de receitas
 
     private fun hideToolbarAndDrawer() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
