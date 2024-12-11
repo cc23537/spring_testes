@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 public class AlimentoEstocadoDTO {
     private String nomeAlimento;
-    private LocalDate validade;
+    private String validade;
     private int quantidadeEstoque;
     private Double calorias;
     private String especificacoes;

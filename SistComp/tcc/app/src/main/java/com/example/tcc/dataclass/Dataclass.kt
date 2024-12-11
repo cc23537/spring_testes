@@ -1,5 +1,6 @@
 package com.example.tcc.dataclass
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDate
 
 data class Cliente(
@@ -65,7 +66,7 @@ data class Compra(
 
 data class AlimentoEstocadoDto(
     val nomeAlimento: String,
-    val validade: LocalDate,
+    val validade: String,
     val quantidadeEstoque: Int,
     val calorias: Double,
     val especificacoes: String

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -110,15 +111,16 @@ public class ClienteController {
             List<AlimentoEstocado> estoque = alimentoEstocadoRepository.findByCliente(clienteOptional.get());
 
             // Mapeie a lista de AlimentoEstocado para a lista de AlimentoEstocadoDTO
-            List<AlimentoEstocadoDTO> estoqueDTO = estoque.stream().map(alimentoEstocado -> 
-                new AlimentoEstocadoDTO(
+            List<AlimentoEstocadoDTO> estoqueDTO = estoque.stream().map(alimentoEstocado -> {
+                String validadeFormatada = alimentoEstocado.getValidade().format(DateTimeFormatter.ISO_LOCAL_DATE);
+                return new AlimentoEstocadoDTO(
                     alimentoEstocado.getAlimentoASerEstocado().getNomeAlimento(),
-                    alimentoEstocado.getValidade(),
+                    validadeFormatada,  // Validade formatada
                     alimentoEstocado.getQuantidadeEstoque(),
                     alimentoEstocado.getAlimentoASerEstocado().getCalorias(),
                     alimentoEstocado.getEspecificacoes()
-                )
-            ).collect(Collectors.toList());
+                );
+            }).collect(Collectors.toList());
 
             // Retorne a lista de AlimentoEstocadoDTO
             return new ResponseEntity<>(estoqueDTO, HttpStatus.OK);
