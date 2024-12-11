@@ -1,9 +1,11 @@
 package com.example.tcc
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var clienteViewModel: ClienteViewModel
     private var nomeclie: String = ""
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,12 +31,20 @@ class MainActivity : AppCompatActivity() {
 
         clienteViewModel = ViewModelProvider(this).get(ClienteViewModel::class.java)
 
-
         val isLoggedIn = checkUserLoggedIn()
 
         if (savedInstanceState == null) {
             if (isLoggedIn) {
-                replaceFragment(HomeFragment(), true)
+                val clienteId = getSavedClienteId()
+                if (clienteId != null) {
+                    clienteViewModel.setClienteId(clienteId)
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        { replaceFragment(HomeFragment(), true) },
+                        3000
+                    )
+                } else {
+                    replaceFragment(LoginFragment(), false)
+                }
             } else {
                 replaceFragment(SplashFragment(), false)
                 Handler(Looper.getMainLooper()).postDelayed(
@@ -67,24 +78,60 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
 
+        binding.btnAjuda.setOnClickListener{
+            replaceFragment()
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
+
         // Observe o clienteId e faça a chamada da API
         clienteViewModel.clienteId.observe(this, { clienteId ->
             if (clienteId != null) {
                 lifecycleScope.launch {
-                        nomeclie = getClienteNome(clienteId).toString()
+                    nomeclie = getClienteNome(clienteId).toString()
                     println(getClienteNome(clienteId))
-                    if (nomeclie != null){
+                    if (nomeclie != null) {
                         binding.tvUsername.text = nomeclie
                     }
-
                 }
             }
         })
     }
 
     private fun checkUserLoggedIn(): Boolean {
-        // Adicione sua lógica de verificação de login aqui
-        return false
+        val sharedPreferences = this.getSharedPreferences("login_prefs", MODE_PRIVATE)
+        return sharedPreferences.getBoolean("is_logged_in", false)
+    }
+
+    fun saveLoginState(isLoggedIn: Boolean) {
+        val sharedPreferences = this.getSharedPreferences("login_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("is_logged_in", isLoggedIn)
+        editor.apply()
+    }
+
+    fun saveClienteId(clienteId: Int) {
+        val sharedPreferences = this.getSharedPreferences("login_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("cliente_id", clienteId)
+        editor.apply()
+    }
+
+    private fun getSavedClienteId(): Int? {
+        val sharedPreferences = this.getSharedPreferences("login_prefs", MODE_PRIVATE)
+        return if (sharedPreferences.contains("cliente_id")) {
+            sharedPreferences.getInt("cliente_id", -1)
+        } else {
+            null
+        }
+    }
+
+    private fun logout() {
+        saveLoginState(false)
+        val sharedPreferences = this.getSharedPreferences("login_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("cliente_id")
+        editor.apply()
+        replaceFragment(LoginFragment(), false)
     }
 
     fun replaceFragment(fragment: Fragment, showMenuButton: Boolean) {
@@ -98,6 +145,4 @@ class MainActivity : AppCompatActivity() {
     fun setMenuButtonVisibility(visible: Boolean) {
         binding.btnToggleMenu.visibility = if (visible) View.VISIBLE else View.GONE
     }
-
-
 }

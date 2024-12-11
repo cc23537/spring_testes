@@ -21,8 +21,11 @@ import com.example.tcc.api.Rotas
 import com.example.tcc.api.getRetrofit
 import com.example.tcc.databinding.FragmentListaBinding
 import com.example.tcc.dataclass.Alimento
+import com.example.tcc.dataclass.AlimentoASerComprado
 import com.example.tcc.dataclass.ApiResponse
+import com.example.tcc.dataclass.ClientePft
 import com.example.tcc.dataclass.Compra
+import com.example.tcc.dataclass.CompraWrapper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,7 +35,7 @@ class ListaFragment : Fragment() {
 
     private var _binding: FragmentListaBinding? = null
     private val binding get() = _binding!!
-    private lateinit var alimentosList: ArrayList<Compra>
+    private lateinit var alimentosList: ArrayList<CompraWrapper>
     private lateinit var userViewModel: ClienteViewModel // ViewModel do usuário
 
     override fun onCreateView(
@@ -72,6 +75,7 @@ class ListaFragment : Fragment() {
         }
     }
 
+
     private fun fetchCompras() {
         println("Iniciando fetchCompras")
         val retrofit = getRetrofit()
@@ -94,12 +98,12 @@ class ListaFragment : Fragment() {
                     println("API Responses: $apiResponses")
                     if (apiResponses != null) {
                         alimentosList.clear()
-                        // Mapeia a lista de ApiResponse para a lista de Compra
-                        val compras = apiResponses.map { mapApiResponseToCompra(it) }
-                        alimentosList.addAll(compras)
+                        // Mapeia a lista de ApiResponse para a lista de CompraWrapper
+                        val compras = apiResponses.map { CompraWrapper(it.idCompra, mapApiResponseToCompra(it)) }
+                        alimentosList.addAll(ArrayList(compras))
                         println(alimentosList)
 
-                        // Atualiza o adapter com a nova lista
+                        // Passa a lista de CompraWrapper para o adapter
                         val rvAdapter = RvLista(alimentosList)
                         binding.rvAlimentos.adapter = rvAdapter
                         rvAdapter.notifyDataSetChanged()
@@ -118,15 +122,18 @@ class ListaFragment : Fragment() {
         })
     }
 
+
+
+
     private fun mapApiResponseToCompra(apiResponse: ApiResponse): Compra {
         return Compra(
-            alimentoASerComprado = Alimento(
+            alimentoASerComprado = AlimentoASerComprado(
                 nomeAlimento = apiResponse.alimentoASerComprado.nomeAlimento,
-                calorias = apiResponse.alimentoASerComprado.calorias,
+                calorias = apiResponse.alimentoASerComprado.calorias.toInt(),
                 cliente = apiResponse.alimentoASerComprado.cliente.idCliente // Aqui você pode usar o cliente se necessário
             ),
             quantidade = apiResponse.quantidade,
-            clienteId = apiResponse.cliente.idCliente // Certifique-se de que a classe Compra tem esse campo
+            cliente = ClientePft(apiResponse.cliente.idCliente),
         )
     }
 
@@ -148,8 +155,19 @@ class ListaFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // Obtém a posição do item
+                val position = viewHolder.adapterPosition
+
+                // Obtém o CompraWrapper associado à posição
+                val compraWrapper = alimentosList[position]
+
+                // Obtém o idCompra
+                val idCompra = compraWrapper.idCompra
+                Toast.makeText(requireContext(), "ID da Compra = $idCompra", Toast.LENGTH_SHORT).show()
+
+                // Deleta o item da lista (exemplo do seu código)
                 val adapter = binding.rvAlimentos.adapter as RvLista
-                var resposta: String = adapter.deleteItem(viewHolder.adapterPosition, requireContext())
+                val resposta: String = adapter.deleteItem(position, requireContext())
                 Toast.makeText(requireContext(), "Alimento = $resposta", Toast.LENGTH_SHORT).show()
             }
 
@@ -198,6 +216,8 @@ class ListaFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(swipe)
         itemTouchHelper.attachToRecyclerView(binding.rvAlimentos)
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

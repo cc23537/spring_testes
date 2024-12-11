@@ -1,7 +1,9 @@
 package com.example.api.controllers;
 
 import com.example.api.models.Alimento;
+import com.example.api.models.AlimentoDto;
 import com.example.api.models.Cliente;
+import com.example.api.models.CompraDto;
 import com.example.api.models.Compras;
 import com.example.api.repositories.ComprasRepository;
 import com.example.api.repositories.ClienteRepository;
@@ -29,36 +31,61 @@ public class ComprasController {
     private AlimentoRepository alimentoRepository;
 
     @PostMapping
-    public ResponseEntity<Compras> criarCompra(@RequestBody Compras compra) {
+    public ResponseEntity<CompraDto> criarCompra(@RequestBody Compras compra) {
         // Verifica se o cliente existe
         Optional<Cliente> clienteOptional = clienteRepository.findById(compra.getCliente().getIdCliente());
         if (clienteOptional.isPresent()) {
-            // Verifica se o alimento já existe
-            Optional<Alimento> alimentoOptional = alimentoRepository.findByNomeAlimento(compra.getAlimentoASerComprado().getNomeAlimento());
+            // Verifica se o alimento já existe pelo ID
+            Optional<Alimento> alimentoOptional = alimentoRepository.findById(compra.getAlimentoASerComprado().getIdAlimento());
             Alimento alimento;
-            
+
             if (alimentoOptional.isPresent()) {
                 alimento = alimentoOptional.get();
             } else {
-                // Se o alimento não existir, cria um novo
-                alimento = new Alimento();
-                alimento.setNomeAlimento(compra.getAlimentoASerComprado().getNomeAlimento());
-                alimento.setCalorias(compra.getAlimentoASerComprado().getCalorias());
-                // Aqui você pode associar o cliente se necessário
-                alimento.setCliente(clienteOptional.get()); // Associa o cliente ao alimento
-                alimento = alimentoRepository.save(alimento); // Salva o novo alimento
+                // Se o alimento não existir pelo ID, verifica pelo nome
+                alimentoOptional = alimentoRepository.findByNomeAlimento(compra.getAlimentoASerComprado().getNomeAlimento());
+                if (alimentoOptional.isPresent()) {
+                    alimento = alimentoOptional.get();
+                } else {
+                    // Se o alimento não existir, cria um novo
+                    alimento = new Alimento();
+                    alimento.setNomeAlimento(compra.getAlimentoASerComprado().getNomeAlimento());
+                    alimento.setCalorias(compra.getAlimentoASerComprado().getCalorias());
+                    // Aqui você pode associar o cliente se necessário
+                    alimento.setCliente(clienteOptional.get()); // Associa o cliente ao alimento
+                    alimento = alimentoRepository.save(alimento); // Salva o novo alimento
+                }
             }
-            
+
+            // Cria o AlimentoDto
+            AlimentoDto alimentoDto = new AlimentoDto(
+                alimento.getNomeAlimento(),
+                alimento.getCalorias(),
+                alimento.getCliente().getIdCliente()
+            );
+
             // Associa o alimento e o cliente à compra
             compra.setAlimentoASerComprado(alimento);
             compra.setCliente(clienteOptional.get());
-            
+
             // Salva a compra
             Compras compraSalva = comprasRepository.save(compra);
-            return new ResponseEntity<>(compraSalva, HttpStatus.CREATED);
+
+            // Cria o CompraDto para retornar
+            CompraDto compraDto = new CompraDto(
+                alimentoDto,
+                compraSalva.getQuantidade(), // Presume-se que você tem o campo quantidade em Compras
+                compraSalva.getCliente().getIdCliente()
+            );
+
+            return new ResponseEntity<>(compraDto, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+
+
+
 
     @DeleteMapping("/{idCompra}/alimento/{idAlimento}")
     public ResponseEntity<Void> removerAlimentoDeCompra(@PathVariable int idCompra, @PathVariable int idAlimento) {
@@ -106,4 +133,17 @@ public class ComprasController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/{idCompra}")
+    public ResponseEntity<Void> deleteCompraById(@PathVariable int idCompra) {
+        if (comprasRepository.existsById(idCompra)) {
+            comprasRepository.deleteById(idCompra);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+
+
 }

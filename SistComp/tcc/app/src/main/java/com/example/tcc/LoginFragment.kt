@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.tcc.api.Rotas
@@ -58,6 +57,8 @@ class LoginFragment : Fragment() {
                     if (clienteId != null) {
                         clienteViewModel.setClienteId(clienteId)
                         (activity as MainActivity).replaceFragment(HomeFragment(), true)
+                        (activity as MainActivity).saveLoginState(true)
+                        (activity as MainActivity).saveClienteId(clienteId)
                     }
                 }
             } catch (e: Exception) {

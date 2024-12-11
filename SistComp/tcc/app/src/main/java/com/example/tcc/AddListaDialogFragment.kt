@@ -2,17 +2,18 @@ package com.example.tcc
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.tcc.controller.registrarCompra
 import com.example.tcc.databinding.FragmentAddListaDialogBinding
-import com.example.tcc.dataclass.Alimento
+import com.example.tcc.dataclass.AlimentoASerComprado
+import com.example.tcc.controller.registrarCompra
+import com.example.tcc.dataclass.AlimentoASerComprado20
+import com.example.tcc.dataclass.ClientePft
 import kotlinx.coroutines.launch
 
 class AddListaDialogFragment : DialogFragment() {
@@ -27,9 +28,9 @@ class AddListaDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAddListaDialogBinding.inflate(inflater, container, false)
+        userViewModel = ViewModelProvider(requireActivity()).get(ClienteViewModel::class.java)
         return _binding!!.root
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -40,38 +41,33 @@ class AddListaDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val idCliente = userViewModel.clienteId.value
         isCancelable = true
 
         binding.btnAddC.setOnClickListener {
             lifecycleScope.launch {
-                val nomeAlimento = binding.txtNomeAddAlimento.text.toString()
-                val quantidade = binding.edtQnt.text.toString()
-                userViewModel.clienteId.observe(viewLifecycleOwner, Observer { idCliente ->
+                try {
+                    val nomeAlimento = binding.edtDescCompra.text.toString()
+                    val quantidade = binding.edtQnt.text.toString().toInt()
+
                     if (idCliente != null) {
-                        val alimentoComprado = Alimento(
-                            nomeAlimento = nomeAlimento,
-                            cliente = idCliente
-                        )
-                        try {
-                            registrarCompra(alimentoComprado,quantidade.toInt(),idCliente)
-                        } catch (e: Exception) {
-                            println(e)
-                        }
+                        val alimentoComprado = AlimentoASerComprado20(nomeAlimento)
+                        val cid = ClientePft(idCliente)
+                        registrarCompra(alimentoComprado, quantidade, cid)
                         parentFragmentManager.setFragmentResult("addAlimentoRequest", Bundle())
                         dismiss()
                     } else {
-                        println("Id do cliente não encontrado ou data inválida")
+                        println("Id do cliente não encontrado")
                     }
-                })
+                } catch (e: Exception) {
+                    println("Erro ao registrar compra: ${e.message}")
+                }
             }
         }
 
-        binding.btnFechar.setOnClickListener{
+        binding.btnFechar.setOnClickListener {
+            println("Button Fechar clicked")
             dismiss()
         }
-
     }
-
-
-
 }

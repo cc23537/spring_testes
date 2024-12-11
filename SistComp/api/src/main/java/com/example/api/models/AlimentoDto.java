@@ -1,15 +1,32 @@
 package com.example.api.models;
 
-public class AlimentoDto {
-    private int idAlimento;
-    private String nomeAlimento;
-    private Double calorias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public AlimentoDto(int idAlimento, String nomeAlimento, Double calorias) {
-        this.idAlimento = idAlimento;
+public class AlimentoDto {
+    @JsonProperty("nomeAlimento")
+    private String nomeAlimento;
+    
+    @JsonProperty("calorias")
+    private Double calorias;
+    
+    @JsonProperty("cliente")
+    private int cliente;
+
+    public AlimentoDto(String nomeAlimento, Double calorias, int cliente) {
         this.nomeAlimento = nomeAlimento;
         this.calorias = calorias;
+        this.cliente = cliente;
     }
 
-    // Getters e Setters
+    public String getNomeAlimento() {
+        return nomeAlimento;
+    }
+
+    public Double getCalorias() {
+        return calorias;
+    }
+
+    public int getCliente() {
+        return cliente;
+    }
 }
