@@ -15,27 +15,15 @@
 
     <!-- Botão flutuante -->
 
-    <TextView
-        android:id="@+id/tvCurrentDay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
-        android:fontFamily="@font/allerta"
-        android:text="Hoje: 21/11/2024"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="379dp"
         android:layout_height="440dp"
+        android:layout_marginBottom="160dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:mcv_showOtherDates="all"
-        tools:layout_editor_absoluteY="169dp" />
+        app:mcv_showOtherDates="all" />
 
     <TextView
         android:id="@+id/tvExpiredFoods"
