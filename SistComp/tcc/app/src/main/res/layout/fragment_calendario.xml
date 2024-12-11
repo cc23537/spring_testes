@@ -19,7 +19,7 @@
         android:id="@+id/calendarView"
         android:layout_width="379dp"
         android:layout_height="440dp"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="252dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
