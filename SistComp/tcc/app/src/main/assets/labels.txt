@@ -1,0 +1,18 @@
+0 Kiwi
+1 Manga
+2 Chickoo
+3 Uva
+4 Laranja
+5 Banana
+6 Maça
+7 Cereja
+8 Morango
+9 Arroz
+10 Carne Bovina
+11 Frango
+12 Melancia
+13 Pera
+14 Pitaya
+15 Brócolis
+16 Tomate
+17 Pepino

@@ -6,9 +6,11 @@ import com.example.tcc.dataclass.AlimentoEstocadoResponse
 import com.example.tcc.dataclass.ApiResponse
 import com.example.tcc.dataclass.Cliente
 import com.example.tcc.dataclass.Compra
+import com.example.tcc.dataclass.CompraASerComprada
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -35,8 +37,15 @@ interface Rotas {
 
 
     @POST("compras")
-    public fun registroCompras(@Body compra: Compra): Response<Compra>
+    fun registroCompras(@Body compra: CompraASerComprada): Call<Compra>
+
 
     @GET("compras/{idCliente}")
     fun listagemCompras(@Path("idCliente") idCliente: Int): Call<List<ApiResponse>>
+
+    @DELETE("/compras/{id}")
+    fun DeletaCompra(@Path("id") idCompra: Int): Call<Void>
+
+    @GET("/alimentosestocados/cliente/{id}")
+    fun getAlimentoEstocadoC(@Path ("id") id: Int): Response<List<String>>
 }

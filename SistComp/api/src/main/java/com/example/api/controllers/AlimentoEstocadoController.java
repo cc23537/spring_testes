@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/alimentosestocados")
@@ -89,4 +90,16 @@ public class AlimentoEstocadoController {
         List<AlimentoEstocado> alimentosEstocados = alimentoEstocadoRepository.findAll();
         return new ResponseEntity<>(alimentosEstocados, HttpStatus.OK);
     }
+
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<String>> getAlimentosByCliente(@PathVariable int idCliente) {
+        Cliente cliente = new Cliente();
+        cliente.setIdCliente(idCliente);
+        List<AlimentoEstocado> alimentosEstocados = alimentoEstocadoRepository.findByCliente(cliente);
+        List<String> nomesAlimentos = alimentosEstocados.stream()
+                .map(ae -> ae.getAlimentoASerEstocado().getNomeAlimento())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(nomesAlimentos);
+    }
+
 }

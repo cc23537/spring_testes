@@ -1,6 +1,7 @@
 package com.example.tcc.dataclass
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.google.gson.annotations.SerializedName
 import java.time.LocalDate
 
 data class Cliente(
@@ -57,12 +58,27 @@ data class Alimento(
     val cliente: Int
 )
 
-data class Compra(
-    val alimentoASerComprado: Alimento,
-    val quantidade: Int,
-    val clienteId: Int
-
+data class AlimentoGDTO(
+    val nomeAlimento: String
 )
+
+data class Compra(
+    val alimentoASerComprado: AlimentoASerComprado,
+    val quantidade: Int,
+    @SerializedName("cliente") val cliente: ClientePft
+)
+
+data class CompraASerComprada(
+    val alimentoASerComprado: AlimentoASerComprado20,
+    val quantidade: Int,
+    @SerializedName("cliente") val cliente: ClientePft
+)
+
+
+data class ClientePft(
+    val idCliente: Int
+)
+
 
 data class AlimentoEstocadoDto(
     val nomeAlimento: String,
@@ -71,3 +87,26 @@ data class AlimentoEstocadoDto(
     val calorias: Double,
     val especificacoes: String
 )
+
+
+
+data class AlimentoASerComprado(
+    val nomeAlimento: String,
+    val calorias: Int?,
+    val cliente: Int
+)
+
+
+data class AlimentoASerComprado20(
+    @SerializedName("nomeAlimento") val nomeAlimento: String
+)
+
+data class CompraWrapper(
+    val idCompra: Int,
+    val compra: Compra
+)
+
+
+
+
+

@@ -1,13 +1,32 @@
 package com.example.api.models;
 
-public class CompraDto {
-    private int idCompra;
-    private AlimentoDto alimentoASerComprado;
-    private int quantidade;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public CompraDto(int idCompra, AlimentoDto alimentoASerComprado, int quantidade) {
-        this.idCompra = idCompra;
+public class CompraDto {
+    @JsonProperty("alimentoASerComprado")
+    private AlimentoDto alimentoASerComprado;
+    
+    @JsonProperty("quantidade")
+    private int quantidade;
+    
+    @JsonProperty("clienteId")
+    private int clienteId;
+
+    public CompraDto(AlimentoDto alimentoASerComprado, int quantidade, int clienteId) {
         this.alimentoASerComprado = alimentoASerComprado;
         this.quantidade = quantidade;
+        this.clienteId = clienteId;
+    }
+
+    public AlimentoDto getAlimentoASerComprado() {
+        return alimentoASerComprado;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public int getClienteId() {
+        return clienteId;
     }
 }
