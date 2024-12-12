@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.appcomida.AjudaFragment
 import com.example.tcc.api.Rotas
 import com.example.tcc.api.getRetrofit
 import com.example.tcc.controller.getClienteNome
@@ -79,7 +80,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnAjuda.setOnClickListener{
-            replaceFragment()
+            replaceFragment(AjudaFragment(), true)
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        binding.btnReceitas.setOnClickListener{
+            replaceFragment(ReceitasFragment(), true)
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
 

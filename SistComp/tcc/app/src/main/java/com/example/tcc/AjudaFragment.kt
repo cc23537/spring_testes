@@ -51,12 +51,14 @@ class AjudaFragment : Fragment() {
             ) {
                 abrirCamera()
             } else {
+                Toast.makeText(context, "Solicitando permissão da câmera", Toast.LENGTH_SHORT).show()
                 requestPermissions(
                     arrayOf(Manifest.permission.CAMERA),
                     CAMERA_PERMISSION_CODE
                 )
             }
         }
+
 
         return binding.root
     }
@@ -78,7 +80,6 @@ class AjudaFragment : Fragment() {
             if (assetManager != null) {
                 assetManager.open("labels.txt").bufferedReader().useLines { lines ->
                     lines.forEach { line ->
-                        // Cada linha tem formato: "0 NomeDoAlimento"
                         val parts = line.split(" ")
                         if (parts.size > 1) {
                             labels.add(parts.subList(1, parts.size).joinToString(" ")) // Ignorar o índice
@@ -151,7 +152,7 @@ class AjudaFragment : Fragment() {
                     // Registrar o alimento apenas se a validade for válida
                     validade?.let {
                         lifecycleScope.launch {
-                            registrarAlimento(label, null, null, it.toString())
+                            //registrarAlimento(label, null, null, it.toString())
                         }
                     } ?: run {
                         println("Validade inválida para $label")
@@ -174,11 +175,13 @@ class AjudaFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(context, "Permissão da câmera concedida", Toast.LENGTH_SHORT).show()
                 abrirCamera()
             } else {
                 Toast.makeText(context, "Permissão da câmera negada", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 }
 

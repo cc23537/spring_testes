@@ -45,4 +45,7 @@ interface Rotas {
 
     @DELETE("/compras/{id}")
     fun DeletaCompra(@Path("id") idCompra: Int): Call<Void>
+
+    @GET("/alimentosestocados/cliente/{id}")
+    fun getAlimentoEstocadoC(@Path ("id") id: Int): Response<List<String>>
 }

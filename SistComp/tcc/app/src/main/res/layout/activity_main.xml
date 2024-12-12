@@ -110,6 +110,15 @@
             android:textColor="@color/white"
             android:drawableStart="@drawable/ic_welcome"
             android:drawablePadding="8dp" />
+        <TextView
+            android:id="@+id/btn_receitas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Receitas"
+            android:textColor="@color/white"
+            android:drawableStart="@drawable/ic_welcome"
+            android:drawablePadding="8dp" />
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
