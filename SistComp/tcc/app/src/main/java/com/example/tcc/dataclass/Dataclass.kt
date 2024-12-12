@@ -88,6 +88,14 @@ data class AlimentoEstocadoDto(
     val especificacoes: String
 )
 
+data class Recipe(
+    val id: Int,
+    val title: String,
+    val image: String,
+    val imageType: String
+)
+
+
 
 
 data class AlimentoASerComprado(

@@ -73,20 +73,24 @@ class ReceitasFragment : Fragment() {
     }
 
     private fun getReceitas(alimentos: List<String>, callback: (List<String>) -> Unit) {
-        val apiKey = "sk-proj-0vX3DHj0PfkFhT-vJMyf43aHT1nT1YhlpNbMwtTw2FEmZzdcS_5rrRQE3du9js8kv6tFUd7VcNT3BlbkFJVp4INvOxmnryAnesZ9QUSCN_9m8kc7De54VkR75O68A2fkl1HhV5fleuAs3k_CBIf8DOcDEUQAsk-proj-0vX3DHj0PfkFhT-vJMyf43aHT1nT1YhlpNbMwtTw2FEmZzdcS_5rrRQE3du9js8kv6tFUd7VcNT3BlbkFJVp4INvOxmnryAnesZ9QUSCN_9m8kc7De54VkR75O68A2fkl1HhV5fleuAs3k_CBIf8DOcDEUQA" // Substitua pela sua chave de API do GPT
         val client = OkHttpClient()
-        val url = "https://api.openai.com/v1/engines/davinci-codex/completions"
+        val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyApayH2H5xMN5eoRDucugFWex38HVNcRJw"
+
+        // Create a single string from the list of alimentos
+        val alimentosString = alimentos.joinToString(separator = ", ")
+
         val json = """
     {
-      "prompt": "Crie receitas usando os seguintes alimentos: ${alimentos.joinToString(", ")}",
-      "max_tokens": 150
-    }
+      "contents": [{
+        "parts":[{"text": "Generate Recipes using the following ingredients, give only the name of the recipe: $alimentosString"}]
+        }]
+       }
     """.trimIndent()
+
         val body = RequestBody.create("application/json; charset=utf-8".toMediaType(), json)
         val request = Request.Builder()
             .url(url)
             .post(body)
-            .addHeader("Authorization", "Bearer $apiKey")
             .build()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -108,21 +112,27 @@ class ReceitasFragment : Fragment() {
                             val responseString = it.string()
                             try {
                                 val jsonResponse = JSONObject(responseString)
-                                val receitas = jsonResponse.getJSONArray("choices").getJSONObject(0).getString("text").split("\n")
-                                callback(receitas)
+                                val receitasJson = jsonResponse.getJSONArray("candidates")
+                                    .getJSONObject(0).getJSONObject("content")
+                                    .getJSONArray("parts").getJSONObject(0).getString("text")
+                                val receitasList = receitasJson.split("\n").filter { it.isNotBlank() }
+                                callback(receitasList)
                             } catch (e: JSONException) {
                                 e.printStackTrace()
-                                // Handle JSON parsing error
                             }
                         } ?: run {
                             println("Response body is null")
                         }
                     }
                 }
-
             })
         }
     }
+
+
+
+
+
 
 
 
