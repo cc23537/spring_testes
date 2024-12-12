@@ -51,9 +51,9 @@ class CalendarioFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.floatingAddAlimentos.setOnClickListener {
-            Toast.makeText(requireContext(), "Adicionar alimentos ainda não implementado!", Toast.LENGTH_SHORT).show()
-            //val add = AddCalendarioFragment()
-            //add.show(parentFragmentManager, "AddDialog")
+            //Toast.makeText(requireContext(), "Adicionar alimentos ainda não implementado!", Toast.LENGTH_SHORT).show()
+            val add = AddCalendarioFragment()
+            add.show(parentFragmentManager, "AddDialog")
         }
 
         calendarView.setOnDateChangedListener { _, date, _ ->
