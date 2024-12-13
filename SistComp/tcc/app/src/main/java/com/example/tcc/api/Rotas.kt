@@ -52,4 +52,10 @@ interface Rotas {
 
     @GET("/alimentosestocados/cliente/{id}")
     fun getAlimentoEstocadoC(@Path("id") id: Int): retrofit2.Call<List<String>>
+
+    @GET("/alimentosestocados/{id}")
+    fun getQuantidade(@Path("id") id: Int): Call<Int>
+
+    @GET("/alimentosestocados/proxdatavalidade/{id}")
+    suspend fun getProxAlimentoValido(@Path("id") id:Int): Response<AlimentoEstocadoDto>
 }

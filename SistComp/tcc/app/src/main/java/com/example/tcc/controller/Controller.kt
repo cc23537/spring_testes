@@ -9,6 +9,7 @@ import com.example.tcc.dataclass.Alimento
 import com.example.tcc.dataclass.AlimentoASerComprado
 import com.example.tcc.dataclass.AlimentoASerComprado20
 import com.example.tcc.dataclass.AlimentoEstocado
+import com.example.tcc.dataclass.AlimentoEstocadoDto
 import com.example.tcc.dataclass.AlimentoGDTO
 import com.example.tcc.dataclass.Cliente
 import com.example.tcc.dataclass.ClientePft
@@ -80,3 +81,52 @@ suspend fun registrarAlimentoEstocado(alimentoEstocado: AlimentoEstocado) {
         println("Erro ao realizar a requisição: $e")
     }
 }
+
+
+
+
+
+suspend fun getQuantidade(clienteId: Int): Int {
+    val apiService = getRetrofit().create(Rotas::class.java)
+    var quantidade: Int = 0 // Inicialize com um valor padrão
+    return try {
+        val response: Response<Int> = apiService.getQuantidade(clienteId).execute()
+        if (response.isSuccessful && response.body() != null) {
+            response.body() ?: 0 // Use o valor retornado pela API
+        } else {
+            println("Erro: ${response.errorBody()?.string()}")
+            0
+        }
+    } catch (e: Exception) {
+        println("Exceção: $e")
+        0
+    }
+}
+suspend fun getprox(clienteId: Int): AlimentoEstocadoDto? {
+    val apiService = getRetrofit().create(Rotas::class.java)
+    return try {
+        val response = apiService.getProxAlimentoValido(clienteId)
+        if (response.isSuccessful) {
+            response.body()
+        } else {
+            println("Erro ao registrar alimento estocado: ${response.errorBody()?.string()}")
+            null
+        }
+    } catch (e: Exception) {
+        println("Erro ao realizar a requisição: $e")
+        null
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

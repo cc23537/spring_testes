@@ -87,6 +87,10 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(ReceitasFragment(), true)
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
+        binding.btnLogout.setOnClickListener{
+            logout()
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
 
         // Observe o clienteId e faça a chamada da API
         clienteViewModel.clienteId.observe(this, { clienteId ->

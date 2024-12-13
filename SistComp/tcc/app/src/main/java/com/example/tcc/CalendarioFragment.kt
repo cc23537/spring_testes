@@ -92,6 +92,7 @@ class CalendarioFragment : Fragment() {
                             val validade = LocalDate.parse(alimento.validade)
                             validade
                         }
+
                         updateCalendar(datas)
 
                         // Filtra os alimentos do dia atual

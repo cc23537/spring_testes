@@ -2,6 +2,7 @@ package com.example.api.controllers;
 
 import com.example.api.models.Alimento;
 import com.example.api.models.AlimentoEstocado;
+import com.example.api.models.AlimentoEstocadoDTO;
 import com.example.api.models.Cliente;
 import com.example.api.repositories.AlimentoEstocadoRepository;
 import com.example.api.repositories.ClienteRepository;
@@ -11,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/alimentosestocados")
@@ -101,5 +104,60 @@ public class AlimentoEstocadoController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(nomesAlimentos);
     }
+    @GetMapping("/{id}")
+    public int getMethodName(@PathVariable int id) {
+        Cliente cliente = new Cliente();
+        cliente = clienteRepository.findById(id).get();
+        List<AlimentoEstocado> alimentosEstocados = alimentoEstocadoRepository.findByCliente(cliente);
+        return alimentosEstocados.size();
+    }
 
+    @GetMapping("/proxdatavalidade/{id}")
+    public ResponseEntity<AlimentoEstocadoDTO> getProximoAlimentoAVencer(@PathVariable int id) {
+        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+        if (!clienteOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Cliente cliente = clienteOptional.get();
+        Optional<AlimentoEstocado> alimento = alimentoEstocadoRepository.findFirstByClienteOrderByValidadeAsc(cliente);
+
+        if (!alimento.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        AlimentoEstocado alimentoEstocado = alimento.get();
+        AlimentoEstocadoDTO alimentoEstocadoDTO = new AlimentoEstocadoDTO(
+            alimentoEstocado.getAlimentoASerEstocado().getNomeAlimento(),
+            alimentoEstocado.getValidade().toString(),
+            alimentoEstocado.getQuantidadeEstoque(),
+            alimentoEstocado.getAlimentoASerEstocado().getCalorias(),
+            alimentoEstocado.getEspecificacoes()
+        );
+
+        return ResponseEntity.ok(alimentoEstocadoDTO);
+    }
+
+    @DeleteMapping("/delete/{nomealimento}/{validade}/{idCliente}")
+    public ResponseEntity<Void> deletarAlimentoEstocado(
+            @PathVariable String nomeAlimento, 
+            @PathVariable String validade, 
+            @PathVariable int idCliente) {
+        
+        LocalDate dataValidade = LocalDate.parse(validade);
+        Optional<AlimentoEstocado> alimentoEstocadoOptional = alimentoEstocadoRepository.findByAlimentoASerEstocado_NomeAlimentoAndValidadeAndCliente_IdCliente(nomeAlimento, dataValidade, idCliente);
+        
+        if (!alimentoEstocadoOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        }
+
+        alimentoEstocadoRepository.delete(alimentoEstocadoOptional.get());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    
+
+
+
+
+    
 }

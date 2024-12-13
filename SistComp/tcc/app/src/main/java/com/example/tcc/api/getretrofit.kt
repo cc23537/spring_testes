@@ -42,7 +42,7 @@ fun getRetrofit(): Retrofit {
 
     // Configuração do Retrofit com o GSON personalizado
     return Retrofit.Builder()
-        .baseUrl("https://588d-187-106-37-122.ngrok-free.app")
+        .baseUrl("https://71be-187-106-37-122.ngrok-free.app/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create(gson)) // Passa o GSON personalizado
         .addCallAdapterFactory(CoroutineCallAdapterFactory()) // Suporte para corrotinas
