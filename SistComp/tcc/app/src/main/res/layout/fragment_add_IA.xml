@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/CalendarioDialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddCalendarioFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="311dp"
+        android:layout_height="496dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="102dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="102dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.494">
+
+        <TextView
+            android:id="@+id/txtAddAlimetos"
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:text="ADICIONAR NO ESTOQUE"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/txtCalorias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
+            android:text="CALORIAS"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtCalorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="100dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/border_rounded"
+            android:hint="Calorias"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtQnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
+            android:text="ESPECIFICAÇÕES"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/txtValidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
+            android:text="VALIDADE"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtValidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="100dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/border_rounded"
+            android:hint="Validade"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnAdicionarAliemto"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/border_button"
+            android:text="ADICIONAR"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnFechar"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/border_button"
+            android:text="FECHAR"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
