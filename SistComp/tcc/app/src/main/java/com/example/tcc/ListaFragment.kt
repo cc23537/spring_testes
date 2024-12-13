@@ -127,7 +127,7 @@ class ListaFragment : Fragment() {
         return Compra(
             alimentoASerComprado = AlimentoASerComprado(
                 nomeAlimento = apiResponse.alimentoASerComprado.nomeAlimento,
-                calorias = apiResponse.alimentoASerComprado.calorias.toInt(),
+                calorias = (apiResponse.alimentoASerComprado.calorias ?: 0.0).toInt(),
                 cliente = apiResponse.alimentoASerComprado.cliente.idCliente // Aqui você pode usar o cliente se necessário
             ),
             quantidade = apiResponse.quantidade,

@@ -32,7 +32,7 @@ interface Rotas {
     suspend fun achaCliente(@Path("id") id: Int): Response<Cliente>
 
     @POST("alimentosestocados")
-    fun resgistrarAlimentoEstocado(@Body alimentoEstocado: AlimentoEstocado): Response<AlimentoEstocado>
+    fun resgistrarAlimentoEstocado(@Body alimentoEstocado: AlimentoEstocado): Response<AlimentoEstocadoResponse>
 
     @GET("/clientes/{id}/alimentosestocados")
     suspend  fun getAllAlimentosEstocados(@Path("id") id:Int): Response<List<AlimentoEstocadoDto>>
