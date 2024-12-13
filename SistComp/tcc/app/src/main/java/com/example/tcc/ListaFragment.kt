@@ -102,8 +102,6 @@ class ListaFragment : Fragment() {
                         val compras = apiResponses.map { CompraWrapper(it.idCompra, mapApiResponseToCompra(it)) }
                         alimentosList.addAll(ArrayList(compras))
                         println(alimentosList)
-
-                        // Passa a lista de CompraWrapper para o adapter
                         val rvAdapter = RvLista(alimentosList)
                         binding.rvAlimentos.adapter = rvAdapter
                         rvAdapter.notifyDataSetChanged()
