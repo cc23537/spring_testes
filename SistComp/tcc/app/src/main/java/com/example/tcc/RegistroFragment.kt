@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.example.tcc.api.Rotas
+import com.example.tcc.api.getRetrofit
 import com.example.tcc.controller.registrarCliente
 import com.example.tcc.databinding.FragmentRegistroBinding
 import kotlinx.coroutines.launch
@@ -32,8 +34,10 @@ class RegistroFragment : Fragment() {
             val password = binding.edtPassworld.text.toString()
             val altura = null
             val peso = null
+            val apiService = getRetrofit().create(Rotas::class.java)
             lifecycleScope.launch {
                 try {
+
                     val response = registrarCliente(nome, email, password, altura, peso)
                     if (response != null){
                         (activity as MainActivity).replaceFragment(LoginFragment(), false)

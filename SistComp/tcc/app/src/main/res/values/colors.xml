@@ -17,4 +17,5 @@
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name= "light_blue">#AFD1E6</color>
+    <color name = "red">#FF0000</color>
 </resources>

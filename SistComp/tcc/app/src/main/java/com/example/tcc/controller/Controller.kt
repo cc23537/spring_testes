@@ -15,6 +15,10 @@ import com.example.tcc.dataclass.Cliente
 import com.example.tcc.dataclass.ClientePft
 import com.example.tcc.dataclass.Compra
 import com.example.tcc.dataclass.CompraASerComprada
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okio.IOException
 import retrofit2.Call
 import retrofit2.Response
 
@@ -62,7 +66,36 @@ fun registrarCompra(alimentoASerComprado: AlimentoASerComprado20, quantidade: In
     })
 }
 
-
+suspend fun removeAlimento(nome: String,data:String, idCliente: Int) {
+    try {
+        val apiService = getRetrofit().create(Rotas::class.java)
+        val response = withContext(Dispatchers.IO) { apiService.removeAlimento(idCliente,nome,data) }
+        withContext(kotlinx.coroutines.Dispatchers.Main) {
+            if (response.isSuccessful) {
+                val body = response.body()
+                println("Registered Alimento: $body")
+            } else {
+                val errorMessage = "Failed: ${response.code()} - ${response.errorBody()?.string()}"
+                println(errorMessage)
+            }
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        withContext(Dispatchers.Main) {
+            println("IOException: ${e.message}")
+        }
+    } catch (e: HttpException) {
+        e.printStackTrace()
+        withContext(Dispatchers.Main) {
+            println("HttpException: ${e.message()}")
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        withContext(kotlinx.coroutines.Dispatchers.Main) {
+            println("Exception: ${e.message}")
+        }
+    }
+}
 
 
 

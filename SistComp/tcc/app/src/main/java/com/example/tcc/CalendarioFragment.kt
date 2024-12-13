@@ -190,6 +190,42 @@ class CalendarioFragment : Fragment() {
             .setTitle("Alimentos no dia ${dataSelecionada.dayOfMonth}/${dataSelecionada.monthValue}/${dataSelecionada.year}")
             .setMessage(message)
             .setPositiveButton(android.R.string.ok, null)
+            .setNeutralButton("Remover") { dialog, which ->
+                val alimentosNomes = alimentosDoDia.map { it.nomeAlimento }.toTypedArray()
+
+                android.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Selecione o alimento a remover")
+                    .setItems(alimentosNomes) { _, selectedIndex ->
+                        val alimentoSelecionado = alimentosDoDia[selectedIndex]
+                        val idCliente = userViewModel.clienteId.value
+                        android.app.AlertDialog.Builder(requireContext())
+                            .setTitle("Confirmar remoção")
+                            .setMessage("Deseja remover o alimento ${alimentoSelecionado.nomeAlimento}?")
+                            .setPositiveButton("Sim") { _, _ ->
+                                viewLifecycleOwner.lifecycleScope.launch {
+                                    val apiService = getRetrofit().create(Rotas::class.java)
+                                    if (idCliente != null){
+                                        val response = apiService.removeAlimento(idCliente,alimentoSelecionado.nomeAlimento, alimentoSelecionado.validade)
+                                        if (response.isSuccessful) {
+                                            fetchAlimentosEstocados()
+
+                                            Toast.makeText(requireContext(), "Alimento removido com sucesso!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(requireContext(), "Falha ao remover o alimento.", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+
+
+                                }
+
+                            }
+                            .setNegativeButton("Não", null)
+                            .show()
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            }
             .show()
     }
 

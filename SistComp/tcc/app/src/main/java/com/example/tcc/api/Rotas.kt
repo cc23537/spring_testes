@@ -58,4 +58,11 @@ interface Rotas {
 
     @GET("/alimentosestocados/proxdatavalidade/{id}")
     suspend fun getProxAlimentoValido(@Path("id") id:Int): Response<AlimentoEstocadoDto>
+
+    @DELETE("/delete/{nomealimento}/{validade}/{id}")
+    suspend fun removeAlimento(
+        @Path("id") id:Int,
+        @Path("nomealimento") nomealimento: String,
+        @Path("validade") validade: String
+    ): Response<Void>
 }
