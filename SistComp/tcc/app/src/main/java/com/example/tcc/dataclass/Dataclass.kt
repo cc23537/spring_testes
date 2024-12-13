@@ -22,7 +22,7 @@ data class ApiResponse(
 data class AlimentoApi(
     val idAlimento: Int,
     val nomeAlimento: String,
-    val calorias: Double,
+    val calorias: Double? = null,
     val cliente: ClienteApi
 )
 

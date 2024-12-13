@@ -20,7 +20,7 @@ fun getRetrofit(): Retrofit {
         .build()
 
     return Retrofit.Builder()
-        .baseUrl("https://d52c-187-106-37-122.ngrok-free.app/")
+        .baseUrl("https://588d-187-106-37-122.ngrok-free.app")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())  // Suporte para corrotinas
