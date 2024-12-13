@@ -17,6 +17,8 @@ import com.example.tcc.databinding.FragmentAddCalendarioBinding
 import com.example.tcc.databinding.FragmentCalendarioBinding
 import com.example.tcc.dataclass.Alimento
 import com.example.tcc.dataclass.AlimentoEstocado
+import com.example.tcc.dataclass.AlimentoGDTO
+import com.example.tcc.dataclass.ClientePft
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -56,45 +58,50 @@ class AddCalendarioFragment : DialogFragment() {
             lifecycleScope.launch {
                 val nomeAlimento = binding.edtNomeAddAlimento.text.toString()
                 val calorias = binding.edtCalorias.text.toString()
-                val caloriasDouble = calorias.toDouble()
+                val caloriasDouble = calorias.toDoubleOrNull() ?: 0.0
                 val especificacoes = binding.edtEspecifi.text.toString()
                 val validade = binding.edtValidade.text.toString()
                 val id = idCliente?.toIntOrNull() ?: 0
 
                 try {
-                    val formattedDate = formatDateToISO(validade) ?: "Invalid date"
-                    val alimento = Alimento(nomeAlimento, caloriasDouble, id)
-                    val alimentoEstocado = AlimentoEstocado(null, alimento, especificacoes, LocalDate.parse(formattedDate), id)
+                    val formattedDate = formatDateToISO(validade) ?: throw IllegalArgumentException("Data inválida")
+                    val alimento = AlimentoGDTO(nomeAlimento, caloriasDouble)
+                    val clientePft = ClientePft(id)
+                    val alimentoEstocado = AlimentoEstocado(
+                        alimentoId = null,
+                        alimentoASerEstocado = alimento,
+                        especificacoes = especificacoes,
+                        validade = LocalDate.parse(formattedDate),
+                        quantidadeEstoque = 10, // Ajuste para o valor correto
+                        cliente = clientePft
+                    )
+                    println(registrarAlimentoEstocado(alimentoEstocado))
                     registrarAlimentoEstocado(alimentoEstocado)
+                    dismiss()
                 } catch (e: Exception) {
-                    println(e)
+                    println("Erro ao adicionar alimento: ${e.message}")
                 }
-
-                parentFragmentManager.setFragmentResult("addAlimentoRequest", Bundle())
-
-                dismiss()
             }
         }
+
     }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDateToISO(dateString: String): String? {
         return try {
-            // o input
             val inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-            // o formato
             val outputFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-
-            // str pra date
             val date = LocalDate.parse(dateString, inputFormatter)
-            // formata
-            date.format(outputFormatter)
+            val formattedDate = date.format(outputFormatter)
+            println("Data formatada: $formattedDate") // Log da data formatada
+            formattedDate
         } catch (e: Exception) {
-
+            println("Erro ao formatar data: ${e.message}") // Log do erro
             null
         }
     }
+
 
 }
 

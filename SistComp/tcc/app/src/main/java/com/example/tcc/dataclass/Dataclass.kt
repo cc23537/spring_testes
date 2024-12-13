@@ -41,15 +41,16 @@ data class AlimentoEstocadoResponse(
     val especificacoes: String,
     val validade: String, // O campo validade é uma String, pois a data está no formato "YYYY-MM-DD"
     val cliente: ClienteApi, // Usando a classe ClienteApi
-    val quantidade: Int
+    val quantidadeEstoque: Int
 )
 
 data class AlimentoEstocado(
     val alimentoId: Int? = null,
-    val alimentoASerEstocado: Alimento? = null,
+    val alimentoASerEstocado: AlimentoGDTO? = null,
     val especificacoes: String? = null,
     val validade: LocalDate,
-    val clienteId: Int = 0
+    val quantidadeEstoque: Int,
+    val cliente: ClientePft
 )
 
 data class Alimento(
@@ -59,7 +60,8 @@ data class Alimento(
 )
 
 data class AlimentoGDTO(
-    val nomeAlimento: String
+    val nomeAlimento: String,
+    val calorias: Double?
 )
 
 data class Compra(

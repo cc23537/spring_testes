@@ -66,13 +66,17 @@ fun registrarCompra(alimentoASerComprado: AlimentoASerComprado20, quantidade: In
 
 
 
-fun registrarAlimentoEstocado(alimentoEstocado: AlimentoEstocado) {
+suspend fun registrarAlimentoEstocado(alimentoEstocado: AlimentoEstocado) {
     val apiService = getRetrofit().create(Rotas::class.java)
-    val response = apiService.resgistrarAlimentoEstocado(alimentoEstocado)
-    if (response.isSuccessful) {
-        val alimentoEstocadoCriado = response.body()
-        println("Alimento estocado com sucesso: $alimentoEstocadoCriado")
-    } else {
-        println("Erro ao registrar alimento estocado: ${response.errorBody()?.string()}")
+    try {
+        val response = apiService.resgistrarAlimentoEstocado(alimentoEstocado)
+        if (response.isSuccessful) {
+            val alimentoEstocadoCriado = response.body()
+            println("Alimento estocado com sucesso: $alimentoEstocadoCriado")
+        } else {
+            println("Erro ao registrar alimento estocado: ${response.errorBody()?.string()}")
+        }
+    } catch (e: Exception) {
+        println("Erro ao realizar a requisição: $e")
     }
 }
