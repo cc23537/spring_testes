@@ -58,7 +58,10 @@ class AjudaFragment : Fragment() {
                 )
             }
         }
-
+        binding.btnAdd.setOnClickListener{
+            val add = AddFromIa()
+            add.show(parentFragmentManager, "AddDialog")
+        }
 
         return binding.root
     }
