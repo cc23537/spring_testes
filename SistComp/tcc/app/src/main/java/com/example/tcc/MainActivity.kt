@@ -145,9 +145,22 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.main_content, fragment)
         fragmentTransaction.commit()
         setMenuButtonVisibility(showMenuButton)
+        updateMenuButtonText(fragment)
     }
 
     fun setMenuButtonVisibility(visible: Boolean) {
         binding.btnToggleMenu.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    fun updateMenuButtonText(fragment: Fragment) {
+        val screenName = when (fragment) {
+            is HomeFragment -> "Home"
+            is ListaFragment -> "Gallery"
+            is CalendarioFragment -> "Calendário"
+            is AjudaFragment -> "IA"
+            is ReceitasFragment -> "Receitas"
+            else -> "Menu"
+        }
+        binding.btnToggleMenu.text = screenName
     }
 }

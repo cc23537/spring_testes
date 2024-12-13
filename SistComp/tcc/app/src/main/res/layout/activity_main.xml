@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/blueMenu">
 
         <!-- Botão de alternância para abrir/fechar a barra lateral -->
         <Button
@@ -30,7 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/btn_toggle_menu"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            />
     </RelativeLayout>
 
     <!-- Barra Lateral -->
@@ -76,49 +77,56 @@
             android:id="@+id/btn_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/ic_home"
+            android:drawablePadding="8dp"
             android:padding="16dp"
             android:text="Home"
-            android:textColor="@color/white"
-            android:drawableStart="@drawable/ic_home"
-            android:drawablePadding="8dp" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/btn_gallery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/tarefa"
+            android:drawablePadding="8dp"
             android:padding="16dp"
             android:text="Gallery"
-            android:textColor="@color/white"
-            android:drawableStart="@drawable/ic_gallery"
-            android:drawablePadding="8dp" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/btn_welcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/calendario"
+            android:drawablePadding="8dp"
             android:padding="16dp"
-            android:text="Welcome"
-            android:textColor="@color/white"
-            android:drawableStart="@drawable/ic_welcome"
-            android:drawablePadding="8dp" />
+            android:text="Calendário"
+            android:textColor="@color/white" />
+
         <TextView
             android:id="@+id/btn_Ajuda"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/icon_ia"
+            android:drawablePadding="8dp"
             android:padding="16dp"
             android:text="Ia"
-            android:textColor="@color/white"
-            android:drawableStart="@drawable/ic_welcome"
-            android:drawablePadding="8dp" />
+            android:textColor="@color/white" />
+
         <TextView
             android:id="@+id/btn_receitas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/receita"
+            android:drawablePadding="8dp"
             android:padding="16dp"
             android:text="Receitas"
-            android:textColor="@color/white"
-            android:drawableStart="@drawable/ic_welcome"
-            android:drawablePadding="8dp" />
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -30,7 +30,7 @@
             android:layout_marginBottom="30dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
-            android:text="ADICIONAR ALIMETOS"
+            android:text="ADICIONAR NO ESTOQUE"
             android:textSize="20sp" />
 
         <TextView
