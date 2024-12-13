@@ -64,17 +64,28 @@ class AddCalendarioFragment : DialogFragment() {
                 val id = idCliente?.toIntOrNull() ?: 0
 
                 try {
+                    // Verificar se a data inserida é menor que a data atual
                     val formattedDate = formatDateToISO(validade) ?: throw IllegalArgumentException("Data inválida")
+                    val validadeDate = LocalDate.parse(formattedDate)
+                    val currentDate = LocalDate.now()
+
+                    if (validadeDate.isBefore(currentDate)) {
+                        // Exibir mensagem de erro se a data for inválida
+                        Toast.makeText(context, "A data de validade não pode ser anterior à data atual.", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+
                     val alimento = AlimentoGDTO(nomeAlimento, caloriasDouble)
                     val clientePft = ClientePft(id)
                     val alimentoEstocado = AlimentoEstocado(
                         alimentoId = null,
                         alimentoASerEstocado = alimento,
                         especificacoes = especificacoes,
-                        validade = LocalDate.parse(formattedDate),
+                        validade = validadeDate,
                         quantidadeEstoque = 10, // Ajuste para o valor correto
                         cliente = clientePft
                     )
+
                     println(registrarAlimentoEstocado(alimentoEstocado))
                     registrarAlimentoEstocado(alimentoEstocado)
                     dismiss()
@@ -83,7 +94,6 @@ class AddCalendarioFragment : DialogFragment() {
                 }
             }
         }
-
     }
 
 
